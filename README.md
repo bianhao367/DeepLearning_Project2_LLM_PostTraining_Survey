@@ -20,7 +20,8 @@ Project2_TaskB_Survey/
 │
 ├── figures/
 │   ├── post_training_pipeline.md       # 流程图（ASCII art）
-│   └── method_comparison_table.md      # 方法对比表
+│   ├── method_comparison_table.md      # 方法对比表
+│   └── technical_roadmap.md            # 技术路线图（Mermaid）
 │
 ├── notes/
 │   ├── finetuning_notes.md             # 第一部分：微调笔记
