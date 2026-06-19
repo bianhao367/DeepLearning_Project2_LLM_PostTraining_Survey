@@ -87,6 +87,66 @@ Project2_TaskB_Survey/
 4. **查看图表**：查看 `figures/` 获取可视化摘要和对比
 5. **引用文献**：使用 `references/references.md` 进行引用
 
+## 技术路线图
+
+完整的 LLM 后训练流程如下：
+
+```
+预训练模型 → 微调（全量/LoRA/QLoRA）→ 偏好数据收集 → 对齐（RLHF/DPO/GRPO）→ 评测 → 错误分析
+```
+
+详细技术路线图请参见 `figures/technical_roadmap.md`（Mermaid 格式）。
+
+## 评测框架使用说明
+
+### lm-evaluation-harness（EleutherAI）
+
+```bash
+# 安装
+pip install lm-eval
+
+# 基础评测
+lm_eval --model hf \
+    --model_args pretrained=Qwen/Qwen2.5-0.5B \
+    --tasks hellaswag,mmlu \
+    --device cuda:0 \
+    --batch_size 8
+
+# 少样本评测
+lm_eval --model hf \
+    --model_args pretrained=MODEL_NAME \
+    --tasks mmlu \
+    --num_fewshot 5 \
+    --device cuda:0
+```
+
+### OpenCompass（上海人工智能实验室）
+
+```bash
+pip install opencompass
+python run.py --models hf_llama2_7b --datasets mmlu_ppl
+```
+
+### HELM（Stanford CRFM）
+
+```bash
+pip install crfm-helm
+helm-run --run-entries mmlu:model=openai/gpt-3.5-turbo --suite my-suite
+helm-summarize --suite my-suite
+```
+
+更多示例请参见 `examples/lm_eval_example_commands.md` 和 `examples/tool_usage_examples.md`。
+
+## LLM 后训练总结
+
+本综述涵盖了大语言模型后训练的三大支柱：
+
+1. **微调**：将预训练模型适配到特定任务。LoRA 和 QLoRA 以极小的显存成本实现了接近全量微调的性能，使得在消费级 GPU 上微调大模型成为可能。
+2. **对齐**：确保模型按照人类价值观行事。RLHF 是主流范式，DPO 提供了更简单的替代方案，GRPO 在推理任务上表现出色。
+3. **评测框架**：为衡量模型能力提供了标准化系统。lm-evaluation-harness 是最广泛使用的开源框架，OpenCompass 在中文评测方面表现突出。
+
+该领域正在快速发展，新方法不断涌现。随着 LLM 能力的持续增长，稳健的后训练和评测对于确保其安全部署将变得越来越重要。
+
 ## 工具与框架
 
 ### 微调相关
